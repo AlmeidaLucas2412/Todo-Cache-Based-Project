@@ -1,3 +1,12 @@
+import { UserForm } from "@/components/user-form";
+
 export default function FirstAccess() {
-  return <h1>Primeiro acesso</h1>;
+  return (
+    <section className="flex flex-col px-6 gap-y-4 py-18">
+      <h2 className="font-semibold text-lg">
+        Preencha seus dados para começar
+      </h2>
+      <UserForm />
+    </section>
+  );
 }
