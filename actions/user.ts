@@ -1,3 +1,5 @@
+"use server";
+
 import { upsertUser } from "@/db/queries/user";
 import { InsertUser } from "@/db/schema";
 import { auth } from "@/lib/auth";
