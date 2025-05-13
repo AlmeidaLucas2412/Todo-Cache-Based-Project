@@ -6,7 +6,7 @@ export const upsertUser = async (data: InsertUser) => {
     .insert(users)
     .values(data)
     .onConflictDoUpdate({
-      target: users.email,
+      target: users.id,
       set: data,
     })
     .returning({ id: users.id });
