@@ -3,7 +3,7 @@ export const authClient = createAuthClient({
   baseURL: "http://localhost:3000",
 });
 
-const { signIn, getSession, signOut } = authClient;
+const { signIn, getSession, signOut, useSession } = authClient;
 
 const customSignIn = async () => {
   signIn.social({
@@ -12,4 +12,4 @@ const customSignIn = async () => {
   });
 };
 
-export { signIn, getSession, signOut, customSignIn };
+export { signIn, getSession, signOut, useSession, customSignIn };
