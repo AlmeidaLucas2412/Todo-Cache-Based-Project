@@ -3,6 +3,7 @@ import "./globals.css";
 import { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "./providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -24,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <Providers>{children}</Providers>
         </ThemeProvider>
         <Toaster />
       </body>
