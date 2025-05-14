@@ -1,4 +1,4 @@
-import { UserForm } from "@/components/user-form";
+import { UserForm } from "@/components/forms/user-form";
 
 export default function FirstAccess() {
   return (
