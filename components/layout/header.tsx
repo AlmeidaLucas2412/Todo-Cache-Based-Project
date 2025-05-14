@@ -3,23 +3,16 @@
 import { ThemeToggle } from "../theme-toggle";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
-import { getSession, signOut } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+import { signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    getSession().then((res) => {
-      if (res.data?.session) setIsLoggedIn(true);
-    });
-  }, []);
   const handleSignOut = async () => {
     try {
       await signOut();
-      setIsLoggedIn(false);
       router.push("/");
     } catch (error) {
       console.error(error);
@@ -33,11 +26,16 @@ export const Header = () => {
       </h1>
       <div className="flex gap-x-2 items-center">
         <ThemeToggle />
-        {isLoggedIn && (
-          <Button onClick={handleSignOut} className="rounded-full" size="icon">
-            <LogOut />
-          </Button>
-        )}
+        {session &&
+          location.pathname !== "/" && ( //TODO: Fix this
+            <Button
+              onClick={handleSignOut}
+              className="rounded-full"
+              size="icon"
+            >
+              <LogOut />
+            </Button>
+          )}
       </div>
     </header>
   );
