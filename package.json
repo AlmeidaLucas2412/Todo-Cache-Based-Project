@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",
+    "@radix-ui/react-dialog": "^1.1.13",
+    "@radix-ui/react-dismissable-layer": "^1.1.9",
     "@radix-ui/react-slot": "^1.2.2",
     "@tanstack/react-query": "^5.76.0",
     "better-auth": "^1.2.7",
