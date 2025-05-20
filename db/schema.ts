@@ -32,6 +32,8 @@ export type SelectUser = typeof users.$inferSelect;
 
 export const todoStatus = pgEnum("todo_status", ["todo", "done", "excluded"]);
 
+export type TodoStatus = (typeof todoStatus.enumValues)[number];
+
 export const todos = pgTable("todos", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
