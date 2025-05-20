@@ -1,7 +1,11 @@
 "use server";
 
-import { getTodoByUserId, upsertTodo } from "@/db/queries/todo";
-import { InsertTodo, SelectTodo } from "@/db/schema";
+import {
+  getTodoByUserId,
+  updateTodoStatus,
+  upsertTodo,
+} from "@/db/queries/todo";
+import { InsertTodo, SelectTodo, TodoStatus } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -50,4 +54,20 @@ export const listTodos = async (
   if (!userId) return null;
 
   return await getTodoByUserId(userId, page, pageSize, title);
+};
+
+export const updateStatus = async (
+  id: string,
+  status: TodoStatus
+): Promise<{
+  success: boolean;
+  error?: string;
+}> => {
+  try {
+    await updateTodoStatus(id, status);
+    return { success: true };
+  } catch (error) {
+    console.error("Falha ao atualizar status da tarefa", error);
+    return { success: false, error: "Falha ao atualizar status da tarefa" };
+  }
 };

@@ -1,6 +1,6 @@
 import { and, count, eq, ilike } from "drizzle-orm";
 import db from "..";
-import { InsertTodo, SelectTodo, todos } from "../schema";
+import { InsertTodo, SelectTodo, todos, TodoStatus } from "../schema";
 
 export const upsertTodo = async (data: InsertTodo): Promise<SelectTodo> => {
   const result = await db
@@ -46,4 +46,11 @@ export const getTodoByUserId = async (
     todos: result ?? [],
     total: total[0].count ?? 0,
   };
+};
+
+export const updateTodoStatus = async (
+  id: string,
+  status: TodoStatus
+): Promise<void> => {
+  await db.update(todos).set({ status }).where(eq(todos.id, id));
 };
