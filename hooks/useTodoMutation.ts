@@ -1,5 +1,5 @@
 import { saveTodo, updateStatus } from "@/actions/todo";
-import { SelectTodo, TodoStatus } from "@/db/schema";
+import { InsertTodo, SelectTodo, TodoStatus } from "@/db/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface TodoResponse {
@@ -8,14 +8,16 @@ interface TodoResponse {
   cacheKey?: string;
 }
 
+type TodoFormData = Pick<InsertTodo, "title" | "description">;
+
 export const useOptimisticTodoMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: TodoFormData) => {
       return saveTodo(data);
     },
-    onMutate: async ({ data }) => {
+    onMutate: async (data: TodoFormData) => {
       await queryClient.cancelQueries({ queryKey: ["todos"] });
 
       const previousTodos = queryClient.getQueryData(["todos"]);
@@ -28,7 +30,7 @@ export const useOptimisticTodoMutation = () => {
 
           return {
             ...old,
-            todos: [data, ...(old?.todos || [])].slice(0, old.todos?.length),
+            todos: [data, ...(old?.todos ?? [])],
             total: (old.total || 0) + 1,
           };
         }
@@ -59,23 +61,31 @@ export const useOptimisticStatusTodoMutation = () => {
       console.log("Mutação iniciada para ID:", id);
       await queryClient.cancelQueries({ queryKey: ["todos"] });
 
-      const previousTodos = queryClient.getQueryData(["todos"]);
+      const previousTodos = queryClient.getQueriesData({ queryKey: ["todos"] });
       console.log("Estado anterior:", previousTodos);
 
-      queryClient.setQueryData(["todos"], (oldTodos: any) => {
-        const updatedTodos = oldTodos.map((todo: any) =>
-          todo.id === id ? { ...todo, status } : todo
-        );
-        console.log("Estado atualizado:", updatedTodos);
-        return updatedTodos;
-      });
+      queryClient.setQueriesData(
+        { queryKey: ["todos"] },
+        (old: TodoResponse | undefined) => {
+          if (!old || !old.todos) return old;
+
+          return {
+            ...old,
+            todos: old.todos.map((todo) =>
+              todo.id === id ? { ...todo, status } : todo
+            ),
+          };
+        }
+      );
 
       return { previousTodos };
     },
 
     onError: (_, __, context) => {
       if (context?.previousTodos) {
-        queryClient.setQueryData(["todos"], context.previousTodos);
+        context.previousTodos.forEach(([queryKey, previousValue]) => {
+          queryClient.setQueryData(queryKey, previousValue);
+        });
       }
     },
 

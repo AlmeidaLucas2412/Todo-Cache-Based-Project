@@ -15,8 +15,7 @@ export const TodoListing = () => {
 
   const pageParams = searchParams.get("page");
   const page = pageParams ? parseInt(pageParams) : 1;
-  const pageSize = 2; //Paginação de 2 tarefas por vez cenário hipotetico
-
+  const pageSize = 4;
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());

@@ -19,6 +19,8 @@ export const saveTodo = async (
   error?: string;
 }> => {
   try {
+    if(!data.title) return { success: false, error: "Título é obrigatório" };
+    
     const session = await auth.api.getSession({ headers: await headers() });
     const userId = session?.user.id || "";
 

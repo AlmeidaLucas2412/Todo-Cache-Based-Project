@@ -27,18 +27,16 @@ export const AddTodoForm = ({ dialog }: Props) => {
     if (!data.title) return;
 
     try {
-      mutation.mutate({ data });
+      mutation.mutate({ title: data.title, description: data.description }, {
+        onSuccess: () => {
+          toast.success("Tarefa salva com sucesso!");
+          dialog.close();
+        },
 
-      const result = await saveTodo(data);
-
-      if (result.success) {
-        setData({ title: "", description: "" });
-        toast.success("Tarefa salva com sucesso!");
-        dialog.close();
-      } else {
-        console.error("Falha ao adicionar tarefa", result.error);
-        toast.error("Falha ao adicionar tarefa");
-      }
+        onError: () => {
+          toast.error("Falha ao salvar tarefa");
+        }
+      });
     } catch (error) {
       console.error(error);
     }

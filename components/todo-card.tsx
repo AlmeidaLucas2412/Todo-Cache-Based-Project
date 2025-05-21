@@ -15,12 +15,16 @@ export const TodoCard = ({ todo }: Props) => {
 
   const handleStatusUpdate = async (id: string, status: TodoStatus) => {
     try {
-      mutation.mutate({ id, status });
-
-      await updateStatus(id, status); //FIXME: Isso não deveria ser chamado aqui.
+      mutation.mutate({ id, status }, {
+        onSuccess: () => {
+          toast.success("Status da tarefa atualizado com sucesso");
+        },
+        onError: () => {
+          toast.error("Falha ao atualizar status da tarefa");
+        }
+      });
     } catch (error) {
       console.error("Falha ao atualizar status da tarefa", error);
-      toast.error("Falha ao atualizar status da tarefa");
     }
   };
 
